@@ -9,10 +9,11 @@
 # Live Demo
 
 [Live Demo Link](https://byumjin.github.io/procedural_kirby/)
+[Youtube Link](https://www.youtube.com/watch?v=hYXqmJBNi9k)
 
 # Overview
 
-With using SDF(Signed Distance Function)s, I have created a [Kirby](https://www.youtube.com/watch?v=DPafFVi6BaE) and rainbow colored background. 
+Using SDF(Signed Distance Function)s, I have created a [Kirby](https://www.youtube.com/watch?v=DPafFVi6BaE) and rainbow colored background. 
 
 ## Creating an animated scene
 
