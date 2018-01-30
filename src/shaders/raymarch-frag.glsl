@@ -698,7 +698,7 @@ vec2 SDF( vec3 p, vec3 ro, vec3 rd )
 
   result = opU(result, starBG(bg_pos, ro, rd, p, gapPos));  
   result = opU(result, stage(p - vec3(0.0, -3.0, 0.0), ro, rd));
-  
+
   return result;
 }
 

@@ -1,46 +1,63 @@
-# CIS-566-Project-2
-https://github.com/CIS-566-2018/homework-2-ray-marching-implicit-surfaces
+# CIS 566 Project 2: Implicit Surface
 
-## Objective
-- Gain more experience with GLSL Shader writing and raymarching
-- Experiment with procedural modeling and animation of scenes
+* Univer sity of Pennsylvania - CIS 566 Project 2: Implicit Surface
+* pennkey : byumjin
+* name : [Byumjin Kim](https://github.com/byumjin)
 
-## Running the Code
+![](imgs/main.png)
 
-1. [Install Node.js](https://nodejs.org/en/download/). Node.js is a JavaScript runtime. It basically allows you to run JavaScript when not in a browser. For our purposes, this is not necessary. The important part is that with it comes `npm`, the Node Package Manager. This allows us to easily declare and install external dependencies such as [dat.GUI](https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage), and [glMatrix](http://glmatrix.net/).
+# Live Demo
 
-2. Using a command terminal, run `npm install` in the root directory of your project. This will download all of those dependencies.
+[Live Demo Link](https://byumjin.github.io/procedural_kirby/)
 
-3. Do either of the following (but we highly recommend the first one for reasons we will explain later).
+# Overview
 
-    a. Run `npm start` and then go to `localhost:5660` in your web browser
+With using SDF(Signed Distance Function)s, I have created a [Kirby](https://www.youtube.com/watch?v=DPafFVi6BaE) and rainbow colored background. 
 
-    b. Run `npm run build` and then go open `index.html` in your web browser
+## Creating an animated scene
 
-## Module Bundling
-One of the most important dependencies of our projects is [Webpack](https://webpack.js.org/concepts/). Webpack is a module bundler which allows us to write code in separate files and use `import`s and `export`s to load classes and functions for other files. It also allows us to preprocess code before compiling to a single file. We will be using [Typescript](https://www.typescriptlang.org/docs/home.html) for this course which is Javascript augmented with type annotations. Webpack will convert Typescript files to Javascript files on compilation and in doing so will also check for proper type-safety and usage. Read more about Javascript modules in the resources section below.
+For creating the kirby's shape, I needed to use every blending operator with ratation matrix.
+His body's reflection model is just PBR, but it is not enough to make some special shaders like his eyes as cartoon style which has gradient color or rainbow colors. So, I used some math to make them look differently (along their material ID).
+All movements of animations are based on a certain timeSeed and its own math function.
 
-## Developing Your Code
-All of the JavaScript code is living inside the `src` directory. The main file that gets executed when you load the page as you may have guessed is `main.ts`. Here, you can make any changes you want, import functions from other files, etc. The reason that we highly suggest you build your project with `npm start` is that doing so will start a process that watches for any changes you make to your code. If it detects anything, it'll automagically rebuild your project and then refresh your browser window for you. Wow. That's cool. If you do it the other way, you'll need to run `npm build` and then refresh your page every time you want to test something.
+## Reflection
 
-We would suggest editing your project with Visual Studio Code https://code.visualstudio.com/. Microsoft develops it and Microsoft also develops Typescript so all of the features work nicely together. Sublime Text and installing the Typescript plugins should probably work as well.
+This method is simple. Instead of finishing ray-marching when it hits something, if we do ray-marching again with its direction of reflection from its hit point, we can get one-further-bounced surface color.
 
-## Assignment Details
+| No Reflection | Reflection |
+| --- | --- |
+| ![](imgs/re00.png) | ![](imgs/re01.png) |
 
-1. The framework is a simplified version of the homework 0 base. It has been pruned to emphasize that the only geometry being rasterized is a single quad on the entire screen. Your job is to rewrite the shaders in src/shaders to create a raymarched scene drawn on top of the quad, and modify any other .ts files to provide the necessary info and interactivity to your raymarcher.
-2. Create and animate a scene! Using SDFs creatively, you must model and animate a "cool" scene. You can make whatever you want of course, but if you just can't think of something, then our suggestion is to make something mechanical like [this](https://www.shadertoy.com/view/XlfGzH). Additionally, we (Dan and Joe) like using [GraphToy](http://www.iquilezles.org/apps/graphtoy/) for easy editing and creation of custom functions for modeling and animating. Specific requirements:
-    * Blending: at least three of union, intersection, subtraction, smooth blend operations
-    * Domain repetition
-    * Parts that animate in interesting ways
-    * A background that isn't a constant color
-3. Finally: You must give your scene at least one kind of interesting material/reflection model, and we're not talking Lame-bert or Blinn-Phong...there are a ton of things you could do! If you just can't think of something, try specular reflection/transmission...or a [real-time subsurface scattering approximation](https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/).
-4. Optional features (for added credit):
-    * Ambient occlusion
-    * Soft shadows
-    * Extra optimizations (explain in your readme)
-    * Volumetric marching
-    * Marching height fields / non-SDF surfaces with reasonable speed
-    * Toggleable controllable camera
+## Ambient Occlusion
 
-## Resources
-- [Lecture slides](https://docs.google.com/presentation/d/1W5KWvkT1tscRG8x5tSfKXBRx9EGTZ-jVsOhIlfhJQLQ/edit?usp=sharing) (see the last two slides)
+Sampling the SDF along the normal with exponentially decreasing weights can get cheap ambient occlusion.
+
+| No Ambient Occlusion | Ambient Occlusion |
+| --- | --- |
+| ![](imgs/ao00.png) | ![](imgs/ao01.png) |
+
+## Soft Shadows
+
+I refered to iq's [soft penumbra shadows](http://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm).
+
+| Hard Shadow | Soft Shadow |
+| --- | --- |
+| ![](imgs/s00.png) | ![](imgs/s01.png) |
+
+## Optimization
+
+### Single Triangular Screen
+
+I used a single triangle mesh which covers the entire our screen with broaden position and UV instead of using provided screen quad mesh.
+
+### Bounding Sphere
+
+We can igonore the rays which never pass through our bounding sphere of each SDF.
+
+| No Bounding Sphere | Small Bounding Sphere  |
+| --- | --- |
+| ![](imgs/b00.png) | ![](imgs/b01.png) |
+
+## Reference
+
+- [Íñigo Quílez's web site](http://www.iquilezles.org/index.html)
