@@ -34,7 +34,13 @@ class Camera {
   update() {
     this.controls.tick();
     vec3.add(this.target, this.position, this.direction);
+
+    this.controls.up = vec3.fromValues(0.0, 1.0, 0.0);
+
     mat4.lookAt(this.viewMatrix, this.controls.eye, this.controls.center, this.controls.up);
+
+    this.position = this.controls.eye;
+    this.up = this.controls.up;
   }
 };
 
