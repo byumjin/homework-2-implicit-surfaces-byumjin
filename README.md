@@ -8,8 +8,8 @@
 
 # Live Demo
 
-[Live Demo Link](https://byumjin.github.io/procedural_kirby/)
-[Youtube Link](https://www.youtube.com/watch?v=hYXqmJBNi9k)
+* [Live Demo Link](https://byumjin.github.io/procedural_kirby/)
+* [Youtube Link](https://www.youtube.com/watch?v=hYXqmJBNi9k)
 
 # Overview
 
