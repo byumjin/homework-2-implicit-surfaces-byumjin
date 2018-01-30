@@ -13,7 +13,8 @@ const controls = {
   // TODO: add any controls you want
   RayMarchStep : 128,
   ShadowStep : 64,
-  AO : 2.0,
+  StepLen : 0.1, 
+  Constant: 4.0,
   SoftShadow : 8.0,
   Reflection : 1,
   MaxStep : 40,
@@ -46,9 +47,12 @@ function main() {
   // E.G. gui.add(controls, 'tesselations', 0, 8).step(1);
   gui.add(controls, 'RayMarchStep', 32.0, 256.0).step(1.0);
   gui.add(controls, 'ShadowStep', 32.0, 256.0).step(1.0);
-
-  gui.add(controls, 'AO', 0.0, 6.0).step(0.01);
   gui.add(controls, 'SoftShadow', 2.0, 32.0).step(1.0);
+
+  var AO = gui.addFolder('AO'); 
+
+  AO.add(controls, 'StepLen', 0.0, 0.2).step(0.01);
+  AO.add(controls, 'Constant', 0.0, 8.0).step(0.1);  
 
   var reflc = gui.addFolder('Reflection'); 
 
@@ -123,9 +127,9 @@ function main() {
     raymarchShader.setViewMatrix(camera.viewMatrix);
     raymarchShader.setViewProjMatrix(viewProj);
     raymarchShader.setinvViewProjMatrix(invViewProj);
-    raymarchShader.setCameraPos(vec4.fromValues( camera.position[0], camera.position[1], camera.position[2], 1.0));
+    raymarchShader.setCameraPos(vec4.fromValues( camera.position[0], camera.position[1], camera.position[2], controls.StepLen));
     raymarchShader.setTimeScreen(vec4.fromValues( elapsedTime, elapsedTime, window.innerWidth, window.innerHeight));
-    raymarchShader.setFactors(vec4.fromValues( controls.AO, controls.SoftShadow, controls.RayMarchStep, controls.ShadowStep));
+    raymarchShader.setFactors(vec4.fromValues( controls.Constant, controls.SoftShadow, controls.RayMarchStep, controls.ShadowStep));
     raymarchShader.setFactors01(vec4.fromValues( controls.MaxStep, controls.Reflection, controls.Intensity, controls.ShadowStep));
 
     raymarchShader.setEnvMap00(triangularScreen.envMap00);

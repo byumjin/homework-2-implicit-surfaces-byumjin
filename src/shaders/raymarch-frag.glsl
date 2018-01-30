@@ -155,7 +155,7 @@ float smin( float a, float b, float k )
 
 vec2 opU( vec2 d1, vec2 d2 )
 {
-	return d1.x > d2.x ?  d2 : d1;
+	return d1.x >= d2.x ?  d2 : d1;
 }
 
 vec2 opsU( vec2 d1, vec2 d2, float k )
@@ -434,28 +434,28 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   //LeftEye
   mat4 rot_le00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_12 );
   mat4 rot_le01 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_12 ) * rot_le00;
-  vec3 le_00 = inverse(mat3(rot_le01))* (p - vec3( 0.19, 0.2, 0.95));
+  vec3 le_00 = inverse(mat3(rot_le01))* (p - vec3( 0.19, 0.2, 0.949));
   le_00 = Blend_Thorn(le_00, -0.4);
   vec2 leftEye = vec2( sdEllipsoid(le_00 , vec3(0.08, 0.25, 0.03)) , OUTER_EYE );
 
    //RightEye
   //mat4 rot_re00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_12 );
   mat4 rot_re01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_12 ) * rot_le00;
-  vec3 re_00 = inverse(mat3(rot_re01))* (p - vec3( -0.19, 0.2, 0.95));
+  vec3 re_00 = inverse(mat3(rot_re01))* (p - vec3( -0.19, 0.2, 0.949));
   re_00 = Blend_Thorn(re_00, -0.4);
   vec2 rightEye = vec2( sdEllipsoid(re_00 , vec3(0.08, 0.25, 0.03)) , OUTER_EYE );
 
   //LeftInnerEye
   mat4 rot_lie00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_18_5 );
   mat4 rot_lie01 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_12 ) * rot_lie00;
-  vec3 lie_00 = inverse(mat3(rot_lie01))* (p - vec3( 0.19, 0.3, 0.95));
+  vec3 lie_00 = inverse(mat3(rot_lie01))* (p - vec3( 0.19, 0.3, 0.949));
   lie_00 = Blend_Thorn(lie_00, -0.4);
   vec2 leftInnerEye = vec2( sdEllipsoid(lie_00 , vec3(0.05, 0.09, 0.01)) , INNER_EYE );
 
   //RightInnerEye
   //mat4 rot_rie00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_18_5 );
   mat4 rot_rie01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_12 ) * rot_lie00;
-  vec3 rie_00 = inverse(mat3(rot_rie01))* (p - vec3( -0.19, 0.3, 0.95));
+  vec3 rie_00 = inverse(mat3(rot_rie01))* (p - vec3( -0.19, 0.3, 0.949));
   rie_00 = Blend_Thorn(rie_00, -0.4);
   vec2 rightInnerEye = vec2( sdEllipsoid(rie_00 , vec3(0.05, 0.09, 0.01)) , INNER_EYE );
 
@@ -510,13 +510,13 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   vec2 result = opS(mouth, body, false);
 
   result = opU(result, leftEye);
-  result = opU(result, leftInnerEye);
-
   result = opU(result, rightEye);
+
+  result = opU(result, leftInnerEye);
   result = opU(result, rightInnerEye);
   
-  result = opsU(result, rightChin, 0.01);
-  result = opsU(result, leftChin, 0.01);
+  result = opU(result, rightChin);
+  result = opU(result, leftChin);
   
 
   result = opU(result, tongue);
@@ -696,9 +696,9 @@ vec2 SDF( vec3 p, vec3 ro, vec3 rd )
   
   vec3 gapPos = bg_pos - p;  
 
-  result = opU(result, starBG(bg_pos, ro, rd, p, gapPos));
-  
+  result = opU(result, starBG(bg_pos, ro, rd, p, gapPos));  
   result = opU(result, stage(p - vec3(0.0, -3.0, 0.0), ro, rd));
+  
   return result;
 }
 
@@ -730,9 +730,9 @@ vec3 getSurfaceNormal(vec3 endPoint, float epsilonParam, vec3 ro, vec3 rd)
 
 #if USE_CHEAP_NORMAL == 0
 	// 6 samples
-	return normalize( vec3( SDF(vec3(endPoint.x + epsilon, endPoint.y, endPoint.z)).x -  SDF(vec3(endPoint.x - epsilon, endPoint.y, endPoint.z)).x,
-							SDF(vec3(endPoint.x, endPoint.y + epsilon, endPoint.z)).x -  SDF(vec3(endPoint.x, endPoint.y - epsilon, endPoint.z)).x,
-							SDF(vec3(endPoint.x, endPoint.y, endPoint.z + epsilon)).x -  SDF(vec3(endPoint.x, endPoint.y, endPoint.z - epsilon)).x));
+	return normalize( vec3( SDF(vec3(endPoint.x + epsilon, endPoint.y, endPoint.z), ro, rd).x -  SDF(vec3(endPoint.x - epsilon, endPoint.y, endPoint.z), ro, rd).x,
+							SDF(vec3(endPoint.x, endPoint.y + epsilon, endPoint.z), ro, rd).x -  SDF(vec3(endPoint.x, endPoint.y - epsilon, endPoint.z), ro, rd).x,
+							SDF(vec3(endPoint.x, endPoint.y, endPoint.z + epsilon), ro, rd).x -  SDF(vec3(endPoint.x, endPoint.y, endPoint.z - epsilon), ro, rd).x));
 	
 #else
 	// 4 samples
@@ -796,16 +796,33 @@ vec4 reflection( vec3 endPoint, vec3 reflectVec, float epsilon)
 //5 tap AO
 float getAO(vec3 endPoint, vec3 normal)
 {
-	float stepLen = 0.1;
+	float stepLen = u_CameraPos.w;
 	float AO = 0.0;
+    float att = 1.0;
 
-	for(int i=1; i<=5; i++)
-	{
-		float sdf = SDF( endPoint + normal * stepLen * float(i), endPoint, normal).x;
-		AO += ( float(i)*stepLen - sdf) / pow(2.0, float(i));
-	}
+    float offset = 0.02;
+   
+    for( int i=0; i<5; i++ )
+    {
+        float dist = offset + stepLen*float(i)/4.0;
+        vec3 newEndpoint =  normal * dist + endPoint;
+        vec2 VAL = SDF( newEndpoint, endPoint, normal );
 
-	return clamp(1.0 - u_Factors.x * AO, 0.0, 1.0);
+        //skip when it reachs these surfaces
+        if( OUTER_EYE - 0.5 < VAL.y && CHIN + 0.5 > VAL.y)
+        {
+            
+        }
+        else
+        {
+            float gap = (dist - VAL.x);
+            AO += gap*att;
+        }
+
+        att *= 0.95;
+    }
+
+	return 1.0 - clamp(u_Factors.x * AO, 0.0, 1.0);
 }
 
 vec4 rayMarching(vec3 viewVec, vec3 eyePos, vec3 lightVec, out bool isHit, out vec3 normal, float epsilon, out float AO, out float shadowFactor, out vec4 reflectInfo)
@@ -1130,20 +1147,22 @@ void main() {
 
 		color += (BasicColor.xyz + SpecularColor.xyz * specularTerm) * NoL;
 
-		//AO
-		color *= AO;
-
-		//shadow
-		color *= shadowFactor;
-
-		if(u_Factors01.y > 0.5 && Roughness < 0.79)
+        if(u_Factors01.y > 0.5 && Roughness < 0.79)
 		{
 			vec4 ReflectionColor;
 			float refRoughness;
 			getSurfaceColor(reflectInfo.w, reflectInfo.xyz, ReflectionColor, refRoughness);
 			
 			color += BasicColor.xyz * ReflectionColor.xyz * energyConservation * u_Factors01.z;
-		}		
+		}	
+
+		//AO
+		color *= AO;
+
+		//shadow
+		color *= shadowFactor;
+
+			
 	}
 	
 	if(isHit)
