@@ -29,7 +29,23 @@ let currentTime : number;
 let elapsedTime : number;
 let deltaTime : number;
 
+function play_single_sound() {
+  var JukeBox = new AudioContext();
+  fetch('music/02_Green_Greens.mp3')
+    .then(r=>r.arrayBuffer())
+    .then(b=>JukeBox.decodeAudioData(b))
+    .then(data=>{
+        const audio_buf = JukeBox.createBufferSource();
+        audio_buf.buffer = data;
+        audio_buf.loop = true;
+        audio_buf.connect(JukeBox.destination);
+        audio_buf.start(0);
+        });
+}
+
 function main() {
+
+  play_single_sound();
 
   elapsedTime = 0.0;
   oldTime = Date.now();
