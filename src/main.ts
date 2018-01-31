@@ -41,6 +41,8 @@ function play_single_sound() {
         audio_buf.connect(JukeBox.destination);
         audio_buf.start(0);
         });
+
+        console.log(`Music On!`);
 }
 
 function main() {
