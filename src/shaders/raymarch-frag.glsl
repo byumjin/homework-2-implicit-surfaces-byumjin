@@ -358,7 +358,7 @@ vec2 slopes(vec3 p)
 	vec3 pos = p;
 
 	mat4 rot = rotationMatrix(vec3(1.0, 0.0, 1.0), DEGREE_TO_RAD * 45.0 );
-	vec3 q = inverse(mat3(rot))* (pos);	
+	vec3 q = transpose(mat3(rot))* (pos);	
 
 	vec3 c = vec3(350.0, 20.0, 240.0);
 
@@ -425,7 +425,7 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   //Mouth
   mat4 rot_m00 = rotationMatrix(vec3(0.0, 1.0, 1.0), DEGREE_90 );
   mat4 rot_m01 = rotationMatrix(vec3(1.0, 0.0, 0.0), -DEGREE_90 ) * rot_m00;
-  vec3 m_00 = inverse(mat3(rot_m00))* (p - vec3( 0.0, -0.25, 1.1));
+  vec3 m_00 = transpose(mat3(rot_m00))* (p - vec3( 0.0, -0.25, 1.1));
   vec2 mouth = vec2( udRoundBox(m_00, vec3(0.08), 0.07), MOUTH );
 
   //Tongue
@@ -434,28 +434,28 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   //LeftEye
   mat4 rot_le00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_12 );
   mat4 rot_le01 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_12 ) * rot_le00;
-  vec3 le_00 = inverse(mat3(rot_le01))* (p - vec3( 0.19, 0.2, 0.949));
+  vec3 le_00 = transpose(mat3(rot_le01))* (p - vec3( 0.19, 0.2, 0.949));
   le_00 = Blend_Thorn(le_00, -0.4);
   vec2 leftEye = vec2( sdEllipsoid(le_00 , vec3(0.08, 0.25, 0.03)) , OUTER_EYE );
 
    //RightEye
   //mat4 rot_re00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_12 );
   mat4 rot_re01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_12 ) * rot_le00;
-  vec3 re_00 = inverse(mat3(rot_re01))* (p - vec3( -0.19, 0.2, 0.949));
+  vec3 re_00 = transpose(mat3(rot_re01))* (p - vec3( -0.19, 0.2, 0.949));
   re_00 = Blend_Thorn(re_00, -0.4);
   vec2 rightEye = vec2( sdEllipsoid(re_00 , vec3(0.08, 0.25, 0.03)) , OUTER_EYE );
 
   //LeftInnerEye
   mat4 rot_lie00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_18_5 );
   mat4 rot_lie01 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_12 ) * rot_lie00;
-  vec3 lie_00 = inverse(mat3(rot_lie01))* (p - vec3( 0.19, 0.3, 0.949));
+  vec3 lie_00 = transpose(mat3(rot_lie01))* (p - vec3( 0.19, 0.3, 0.949));
   lie_00 = Blend_Thorn(lie_00, -0.4);
   vec2 leftInnerEye = vec2( sdEllipsoid(lie_00 , vec3(0.05, 0.09, 0.01)) , INNER_EYE );
 
   //RightInnerEye
   //mat4 rot_rie00 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_18_5 );
   mat4 rot_rie01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_12 ) * rot_lie00;
-  vec3 rie_00 = inverse(mat3(rot_rie01))* (p - vec3( -0.19, 0.3, 0.949));
+  vec3 rie_00 = transpose(mat3(rot_rie01))* (p - vec3( -0.19, 0.3, 0.949));
   rie_00 = Blend_Thorn(rie_00, -0.4);
   vec2 rightInnerEye = vec2( sdEllipsoid(rie_00 , vec3(0.05, 0.09, 0.01)) , INNER_EYE );
 
@@ -464,14 +464,14 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   mat4 rot_rc00 = rotationMatrix(vec3(0.0, 0.0, 1.0), DEGREE_90 );
   mat4 rot_rc01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_24 ) * rot_rc00;
   mat4 rot_rc02 = rotationMatrix(vec3(1.0, 0.0, 0.0), -DEGREE_10 ) * rot_rc01;
-  vec3 rc_00 = inverse(mat3(rot_rc02))* (p - vec3( -0.4, -0.15, 0.905));
+  vec3 rc_00 = transpose(mat3(rot_rc02))* (p - vec3( -0.4, -0.15, 0.905));
   rc_00 = Blend_Thorn(rc_00, -0.4);
   vec2 rightChin = vec2( sdEllipsoid(rc_00 , vec3(0.05, 0.09, 0.01)) , CHIN );
   
   //mat4 rot_lc00 = rotationMatrix(vec3(0.0, 0.0, 1.0), DEGREE_TO_RAD * 90.0 );
   mat4 rot_lc01 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_24 ) * rot_rc00;
   mat4 rot_lc02 = rotationMatrix(vec3(1.0, 0.0, 0.0), -DEGREE_10 ) * rot_lc01;
-  vec3 lc_00 = inverse(mat3(rot_lc02))* (p - vec3( 0.4, -0.15, 0.905));
+  vec3 lc_00 = transpose(mat3(rot_lc02))* (p - vec3( 0.4, -0.15, 0.905));
   lc_00 = Blend_Thorn(lc_00, -0.4);
   vec2 leftChin = vec2( sdEllipsoid(lc_00 , vec3(0.05, 0.09, 0.01)) , CHIN );
 
@@ -480,12 +480,12 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
 
   //Right Arm
   mat4 rot_00 = rotationMatrix(vec3(0.0, 0.0, 1.0), DEGREE_140 + rightArmSeed);
-  vec3 q_00 = inverse(mat3(rot_00))* (p - vec3(-0.8, 0.3, 0.0));
+  vec3 q_00 = transpose(mat3(rot_00))* (p - vec3(-0.8, 0.3, 0.0));
   vec2 rightArm = vec2( sdEllipsoid(q_00, vec3(0.4, 0.6, 0.4)) , BODY );
 
   //Left Arm
   mat4 rot_01 = rotationMatrix(vec3(-1.0, 0.0, 0.0), -DEGREE_30 );
-  vec3 q_01 = inverse(mat3(rot_01))* (p - vec3(0.65, -0.35, 0.4));
+  vec3 q_01 = transpose(mat3(rot_01))* (p - vec3(0.65, -0.35, 0.4));
   vec2 leftArm = vec2( sdEllipsoid(q_01, vec3(0.35, 0.6, 0.35)) , BODY );
   
   float footSeed = sin(u_TimeScreen.x * 0.01)*0.2;
@@ -494,7 +494,7 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   mat4 rot_02 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_160 );
   mat4 rot_021 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_80 ) * rot_02;
   mat4 rot_022 = rotationMatrix(vec3(0.0, 0.0, 1.0), -DEGREE_40 + footSeed ) * rot_021;
-  vec3 q_02 = inverse(mat3(rot_022))* (p - vec3(-0.8, -0.6, 0.4));
+  vec3 q_02 = transpose(mat3(rot_022))* (p - vec3(-0.8, -0.6, 0.4));
   q_02 = Blend_Thorn(q_02, -1.0);
   vec2 rightFoot = vec2( sdEllipsoid(q_02, vec3(0.35, 0.6, 0.35)) , FOOT );
 
@@ -502,7 +502,7 @@ vec2 kirby( vec3 p, vec3 ro, vec3 rd, float upDown)
   //mat4 rot_03 = rotationMatrix(vec3(1.0, 0.0, 0.0), DEGREE_160 );
   //mat4 rot_031 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_80 + footSeed ) * rot_02;
   mat4 rot_032 = rotationMatrix(vec3(0.0, 0.0, 1.0), -DEGREE_100 - footSeed ) * rot_021;
-  vec3 q_03 = inverse(mat3(rot_032))* (p - vec3(0.8, -0.6, 0.2));
+  vec3 q_03 = transpose(mat3(rot_032))* (p - vec3(0.8, -0.6, 0.2));
   q_03 = Blend_Thorn(q_03, -1.0);
   vec2 leftFoot = vec2( sdEllipsoid(q_03, vec3(0.35, 0.6, 0.35)) , FOOT);
 
@@ -554,28 +554,28 @@ vec2 star( vec3 p, vec3 ro, vec3 rd, float upDown)
   float bendFactor = -2.0;
 
   mat4 rot_star00 = rotationMatrix(vec3(0.0, 0.0, 1.0), DEGREE_90 );
-  vec3 s_00 = inverse(mat3(rot_star00))* (pos - vec3(0.0, 0.0, radius));
+  vec3 s_00 = transpose(mat3(rot_star00))* (pos - vec3(0.0, 0.0, radius));
   s_00 = Blend_Thorn(s_00, bendFactor);
 
   vec2 star00 = vec2( sdEllipsoid(s_00, starShape), STAR_PANNEL );
 
   mat4 rot_star01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_72 ) * rot_star00;
-  vec3 s_01 = inverse(mat3(rot_star01))* (pos - vec3(-0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
+  vec3 s_01 = transpose(mat3(rot_star01))* (pos - vec3(-0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
   s_01 = Blend_Thorn(s_01, bendFactor);
   vec2 star01 = vec2( sdEllipsoid(s_01, starShape), STAR_PANNEL );
 
   mat4 rot_star02 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_72 ) * rot_star00;
-  vec3 s_02 = inverse(mat3(rot_star02))* (pos - vec3(0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
+  vec3 s_02 = transpose(mat3(rot_star02))* (pos - vec3(0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
   s_02 = Blend_Thorn(s_02, bendFactor);
   vec2 star02 = vec2( sdEllipsoid(s_02, starShape), STAR_PANNEL );
 
   mat4 rot_star03 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_144 ) * rot_star00;
-  vec3 s_03 = inverse(mat3(rot_star03))* (pos - vec3(-0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
+  vec3 s_03 = transpose(mat3(rot_star03))* (pos - vec3(-0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
   s_03 = Blend_Thorn(s_03, bendFactor);
   vec2 star03 = vec2( sdEllipsoid(s_03, starShape), STAR_PANNEL );
 
   mat4 rot_star04 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_144 ) * rot_star00;
-  vec3 s_04 = inverse(mat3(rot_star04))* (pos - vec3(0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
+  vec3 s_04 = transpose(mat3(rot_star04))* (pos - vec3(0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
   s_04 = Blend_Thorn(s_04, bendFactor);
   vec2 star04 = vec2( sdEllipsoid(s_04, starShape), STAR_PANNEL );
 
@@ -624,28 +624,28 @@ vec2 starBG( vec3 p, vec3 ro, vec3 rd, vec3 oriPos, vec3 gapPos)
   float bendFactor = -2.0;
 
   mat4 rot_star00 = rotationMatrix(vec3(0.0, 0.0, 1.0), DEGREE_90 );
-  vec3 s_00 = inverse(mat3(rot_star00))* (pos - vec3(0.0, 0.0, radius));
+  vec3 s_00 = transpose(mat3(rot_star00))* (pos - vec3(0.0, 0.0, radius));
   s_00 = Blend_Thorn(s_00, bendFactor);
 
   vec2 star00 = vec2( sdEllipsoid(s_00, starShape), STAR_BG );
 
   mat4 rot_star01 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_72 ) * rot_star00;
-  vec3 s_01 = inverse(mat3(rot_star01))* (pos - vec3(-0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
+  vec3 s_01 = transpose(mat3(rot_star01))* (pos - vec3(-0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
   s_01 = Blend_Thorn(s_01, bendFactor);
   vec2 star01 = vec2( sdEllipsoid(s_01, starShape), STAR_BG );
 
   mat4 rot_star02 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_72 ) * rot_star00;
-  vec3 s_02 = inverse(mat3(rot_star02))* (pos - vec3(0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
+  vec3 s_02 = transpose(mat3(rot_star02))* (pos - vec3(0.95105651629515357211643933337938 * radius, 0.0, 0.30901699437494742410229341718282 * radius));
   s_02 = Blend_Thorn(s_02, bendFactor);
   vec2 star02 = vec2( sdEllipsoid(s_02, starShape), STAR_BG );
 
   mat4 rot_star03 = rotationMatrix(vec3(0.0, 1.0, 0.0), DEGREE_144 ) * rot_star00;
-  vec3 s_03 = inverse(mat3(rot_star03))* (pos - vec3(-0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
+  vec3 s_03 = transpose(mat3(rot_star03))* (pos - vec3(-0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
   s_03 = Blend_Thorn(s_03, bendFactor);
   vec2 star03 = vec2( sdEllipsoid(s_03, starShape), STAR_BG );
 
   mat4 rot_star04 = rotationMatrix(vec3(0.0, 1.0, 0.0), -DEGREE_144 ) * rot_star00;
-  vec3 s_04 = inverse(mat3(rot_star04))* (pos - vec3(0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
+  vec3 s_04 = transpose(mat3(rot_star04))* (pos - vec3(0.58778525229247312916870595463907 * radius, 0.0, -0.80901699437494742410229341718282 * radius));
   s_04 = Blend_Thorn(s_04, bendFactor);
   vec2 star04 = vec2( sdEllipsoid(s_04, starShape), STAR_BG );
 
